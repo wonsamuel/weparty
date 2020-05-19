@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="member">
+
+  <select id="login" parameterType="string" resultMap="memberMap">
+  	SELECT * FROM
+  	<if test="type == 1">
+  		MEMBER 
+  	</if>
+  	 <if test="type == 2">
+  		PARTY_PLANNER 
+  	</if>
+  		WHERE 1=1
+  		<if test="mUserId != null and mUserId != '' and type == 1">
+  			AND MUSERID = #{mUserId}
+  		</if>
+  		<if test="mEmail != null and mEmail != ''">
+	  		<if test="type == 1">
+	  			AND MEMAIL = #{mEmail}
+		  	</if>
+		  	 <if test="type == 2">
+		  		AND PPEMAIL = #{mEmail}
+		  	</if>
+  		</if>
+   		<if test="mUserId != null and mUserId != '' and type == 2">
+  			AND PPUSERID = #{mUserId}
+  		</if>
+  		
+  </select>
+  
+  <select id="simpleLogin" parameterType="string" resultMap="memberMap">
+  	SELECT * FROM 
+  		<if test="type == 1">
+  		MEMBER 
+  		</if>
+  		 <if test="type == 2">
+  			PARTY_PLANNER 
+  		</if>
+  		WHERE 1=1
+  		<if test="mEmail != null and mEmail != ''">
+	  		<if test="type == 1">
+	  			AND MEMAIL = #{mEmail}
+		  	</if>
+		  	 <if test="type == 2">
+		  		AND PPEMAIL = #{mEmail}
+		  	</if>
+  		</if>
+  </select>
+  
+   	<resultMap type="member" id="memberMap">
+		<result column="mMusic" property="mMusic" typeHandler="strArr"/>
+	</resultMap>
+	
+	   	<resultMap type="partyPlanner" id="partyPlannerMap">
+		<result column="ppMusic" property="ppMusic" typeHandler="strArr"/>
+	</resultMap>
+	
+	<insert id="kakaoInsert" parameterType="map">
+		INSERT INTO 
+		<if test="type == 1">
+			MEMBER VALUES(SEQ_MEMBER.NEXTVAL,#{nickname},#{userId},null, #{gender}, null, null,null,#{userEmail}, null, #{profileImg}, DEFAULT, null, DEFAULT, 0, DEFAULT)
+		</if>
+		<if test="type == 2">
+			PARTY_PLANNER VALUES(SEQ_PARTY_PLANNER.NEXTVAL, null, #{nickname},#{userId}, null, null, #{userEmail}, null, null, null, null, null, null, null, null, DEFAULT, DEFAULT, 0, 0, DEFAULT, DEFAULT)
+		</if>
+	</insert>
+	
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO MEMBER VALUES (SEQ_MEMBER.NEXTVAL, #{mName}, #{mUserId}, #{mPw}, #{mGender}, #{mAge}, #{mBDay}, #{mPhone},#{mEmail}, null, #{mProImgOri}, #{mProImgRenamed}, DEFAULT, #{mMusic, typeHandler=strArr}, DEFAULT, 0, DEFAULT)
+		
+		<selectKey order="AFTER" keyProperty="mCode" resultType="_int">
+			SELECT SEQ_MEMBER.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="insertMemberImgs" parameterType="memberImgs">
+		INSERT INTO M_IMG VALUES (#{mCode}, #{mImgOri}, #{mImgRenamed})
+	</insert>
+	
+	<select id="mCheckId" parameterType="string" resultMap="memberMap">
+		SELECT * FROM MEMBER WHERE MUSERID = #{mUserId}
+	</select>
+	
+		<select id="pCheckId" parameterType="string" resultMap="partyPlannerMap">
+		SELECT * FROM PARTY_PLANNER WHERE PPUSERID = #{mUserId}
+	</select>
+	
+	<select id="mCheckEmail" parameterType="string" resultMap="memberMap">
+		SELECT * FROM MEMBER WHERE MEMAIL = #{mEmail}
+	</select>
+	
+	<select id="pCheckEmail" parameterType="string" resultMap="partyPlannerMap">
+		SELECT * FROM PARTY_PLANNER WHERE PPEMAIL = #{mEmail}
+	</select>
+	
+	<insert id="insertPartyPlanner" parameterType="partyPlanner">
+		INSERT INTO PARTY_PLANNER VALUES (SEQ_PARTY_PLANNER.NEXTVAL, #{ppName}, #{ppMainMember}, #{ppUserId}, #{ppPw}, #{ppPhone}, #{ppEmail}, #{ppStartDate}, DEFAULT, #{ppLogoOri}, #{ppLogoRenamed}, #{ppFacebook}, #{ppInstagram}, #{ppTwitter}, #{ppMusic, typeHandler=strArr}, null, DEFAULT, DEFAULT, 0, 0, DEFAULT)
+		
+		<selectKey order="AFTER" keyProperty="ppCode" resultType="_int">
+			SELECT SEQ_PARTY_PLANNER.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="insertPartyPlannerMember" parameterType="partyPlannerMember">
+		INSERT INTO PP_MEMBER VALUES (SEQ_PP_MEMBER.NEXTVAL, #{ppMName}, #{ppMJob}, #{ppMImgOri}, #{ppMImgRenamed}, #{ppMInstagram}, #{ppCode})
+	</insert>
+	
+	
+	
+	
+</mapper>

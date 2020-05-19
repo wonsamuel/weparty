@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<typeAliases>
+		<typeAlias type="com.kh.weparty.member.model.vo.Member" alias="member"/>
+		<typeAlias type="com.kh.weparty.member.model.vo.MemberImgs" alias="memberImgs"/>
+		
+		<typeAlias type="com.kh.weparty.common.StringArrayType" alias="strArr"/>
+		
+		<typeAlias type="com.kh.weparty.partyplanner.model.vo.PartyPlanner" alias="partyPlanner"/>
+		<typeAlias type="com.kh.weparty.partyplanner.model.vo.PartyPlannerMember" alias="partyPlannerMember"/>
+	</typeAliases>
+
+</configuration>
